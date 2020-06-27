@@ -37,9 +37,9 @@ jobs:
       uses: actions/setup-java@v1.3.0
       with:
         java-version: '11'
-    - name: Install dependencies
+    - name: Build
       run: |
-        mvn clean install
+        mvn install
 
     - name: Perform AppThreat Sast-Scan
       uses: AppThreat/sast-scan-action@master
