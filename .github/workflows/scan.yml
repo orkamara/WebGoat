@@ -23,7 +23,7 @@ jobs:
       uses: ShiftLeftSecurity/scan-action@master
       env:
 #        WORKSPACE: "" # https://github.com/${{ github.repository }}/blob/${{ github.sha }}
-#        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         SCAN_AUTO_BUILD: true
       with:
         type: "java"
@@ -36,11 +36,19 @@ jobs:
     - name: Setup Java JDK
       uses: actions/setup-java@v1.3.0
       with:
-        java-version: 11.0.7
+        java-version: '11'
     - name: Install dependencies
       run: |
         mvn clean install
+
     - name: Perform AppThreat Sast-Scan
       uses: AppThreat/sast-scan-action@master
       with:
         type: "java"
+
+    - name: Analyze with SonarCloud
+      run: |
+        mvn sonar:sonar -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=$SONAR_TOKEN
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
