@@ -1,11 +1,19 @@
-name: Scan
+name: Security Scan
 
-on: [push]
+on:
+  push:
+    branches:
+      - master
+      - feature/*
+      - epic/*
+      - fix/*
+  pull_request:
+    branches:
+      - master
 
 jobs:
-  scan:
+  Secuirty-Scan:
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/checkout@v1
 #     - name: Setup Java JDK
@@ -20,11 +28,15 @@ jobs:
         type: "java"
     - name: Perform ShiftLeft Scan
       uses: ShiftLeftSecurity/scan-action@master
-      with:
-        type: "java"
       env:
-#        WORKSPACE: https://github.com/${{ github.repository }}/blob/${{ github.sha }}
+#        WORKSPACE: "" # https://github.com/${{ github.repository }}/blob/${{ github.sha }}
 #        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         SCAN_AUTO_BUILD: true
-
+      with:
+        type: "java"
+#         output: reports
+#     - name: Upload report
+#       uses: github/codeql-action/upload-sarif@v1
+#       with:
+#         sarif_file: reports
 
