@@ -25,8 +25,8 @@ jobs:
 #        WORKSPACE: "" # https://github.com/${{ github.repository }}/blob/${{ github.sha }}
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         SCAN_AUTO_BUILD: true
-      with:
-        type: "java"
+#       with:
+#         type: "java"
 #         output: reports
 #     - name: Upload report
 #       uses: github/codeql-action/upload-sarif@v1
