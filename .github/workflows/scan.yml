@@ -61,7 +61,7 @@ jobs:
         java-version: '11'
     - name: Build
       run: |
-        mvn package
+        mvn install -X
 
     - name: Analyze with SonarCloud
       run: |
