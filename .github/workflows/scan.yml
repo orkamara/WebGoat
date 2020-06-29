@@ -25,50 +25,50 @@ jobs:
     - name: Perform ShiftLeft Scan
       uses: ShiftLeftSecurity/scan-action@master
       env:
-        WORKSPACE: https://github.com/${{ github.repository }}/blob/${{ github.sha }} # ""
+        WORKSPACE: https://github.com/${{ github.repository }}/blob/${{ github.sha }}
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         SCAN_AUTO_BUILD: true
       with:
         type: "java"
         output: reports
-#     - name: Upload report
-#       uses: github/codeql-action/upload-sarif@v1
+    - uses: actions/upload-artifact@v1
+      with:
+        name: reports
+        path: reports
+
+#   Appthreat-Sast-Scan-Action:
+#     runs-on: ubuntu-latest
+#     steps:
+#     - name: Setup Java JDK
+#       uses: actions/setup-java@v1.3.0
 #       with:
-#         sarif_file: reports
+#         java-version: '11'
+#     - name: Build
+#       run: |
+#         mvn install
 
-  Appthreat-Sast-Scan-Action:
-    runs-on: ubuntu-latest
-    steps:
-    - name: Setup Java JDK
-      uses: actions/setup-java@v1.3.0
-      with:
-        java-version: '11'
-    - name: Build
-      run: |
-        mvn install
+#     - name: Perform AppThreat Sast-Scan
+#       uses: AppThreat/sast-scan-action@master
+#       with:
+#         type: "java"
 
-    - name: Perform AppThreat Sast-Scan
-      uses: AppThreat/sast-scan-action@master
-      with:
-        type: "java"
+#   Sonar-Sast-Scan-Action:
+#     runs-on: ubuntu-latest
+#     steps:
+#     - name: Setup Java JDK
+#       uses: actions/setup-java@v1.3.0
+#       with:
+#         java-version: '11'
+#     - name: Build
+#       run: |
+#         mvn install
 
-  Sonar-Sast-Scan-Action:
-    runs-on: ubuntu-latest
-    steps:
-    - name: Setup Java JDK
-      uses: actions/setup-java@v1.3.0
-      with:
-        java-version: '11'
-    - name: Build
-      run: |
-        mvn install
-
-    - name: Analyze with SonarCloud
-      run: |
-        mvn sonar:sonar -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=$SONAR_TOKEN -Dsonar.projectKey=WebGoat -Dsonar.organization=mikomraz
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+#     - name: Analyze with SonarCloud
+#       run: |
+#         mvn sonar:sonar -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=$SONAR_TOKEN -Dsonar.projectKey=WebGoat -Dsonar.organization=mikomraz
+#       env:
+#         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         
   CodeQL-Build:
     runs-on: ubuntu-latest
@@ -81,10 +81,10 @@ jobs:
       - run: git checkout HEAD^2
         if: ${{ github.event_name == 'pull_request' }}
 
-      - name: Initialize CodeQL
-        uses: github/codeql-action/init@v1
-        with:
-          languages: java
+#       - name: Initialize CodeQL
+#         uses: github/codeql-action/init@v1
+#         with:
+#           languages: java
 
       - name: Autobuild
         uses: github/codeql-action/autobuild@v1
@@ -97,5 +97,5 @@ jobs:
 #         run: |
 #           mvn install
 
-      - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v1
+#       - name: Perform CodeQL Analysis
+#         uses: github/codeql-action/analyze@v1
