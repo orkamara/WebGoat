@@ -19,7 +19,6 @@ jobs:
     steps:
     - run: |
         echo ${{secrets.DEPLOY_PASSWORD}} | sudo -S chown -R $USER:$USER /home/runner/work/WebGoat
-        
     - uses: actions/checkout@v1
 
     - name: Perform ShiftLeft Scan
@@ -39,6 +38,9 @@ jobs:
 #   Appthreat-Sast-Scan-Action:
 #     runs-on: ubuntu-latest
 #     steps:
+#     - run: |
+#         echo ${{secrets.DEPLOY_PASSWORD}} | sudo -S chown -R $USER:$USER /home/runner/work/WebGoat
+#     - uses: actions/checkout@v1
 #     - name: Setup Java JDK
 #       uses: actions/setup-java@v1.3.0
 #       with:
@@ -55,6 +57,9 @@ jobs:
   Sonar-Sast-Scan-Action:
     runs-on: ubuntu-latest
     steps:
+    - run: |
+        echo ${{secrets.DEPLOY_PASSWORD}} | sudo -S chown -R $USER:$USER /home/runner/work/WebGoat
+    - uses: actions/checkout@v1
     - name: Setup Java JDK
       uses: actions/setup-java@v1.3.0
       with:
