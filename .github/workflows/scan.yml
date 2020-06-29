@@ -35,24 +35,24 @@ jobs:
         name: reports
         path: reports
 
-#   Appthreat-Sast-Scan-Action:
-#     runs-on: ubuntu-latest
-#     steps:
-#     - run: |
-#         echo ${{secrets.DEPLOY_PASSWORD}} | sudo -S chown -R $USER:$USER /home/runner/work/WebGoat
-#     - uses: actions/checkout@v1
-#     - name: Setup Java JDK
-#       uses: actions/setup-java@v1.3.0
-#       with:
-#         java-version: '11'
-#     - name: Build
-#       run: |
-#         mvn install
+  Appthreat-Sast-Scan-Action:
+    runs-on: ubuntu-latest
+    steps:
+    - run: |
+        echo ${{secrets.DEPLOY_PASSWORD}} | sudo -S chown -R $USER:$USER /home/runner/work/WebGoat
+    - uses: actions/checkout@v1
+    - name: Setup Java JDK
+      uses: actions/setup-java@v1.3.0
+      with:
+        java-version: '11'
+    - name: Build
+      run: |
+        mvn install
 
-#     - name: Perform AppThreat Sast-Scan
-#       uses: AppThreat/sast-scan-action@master
-#       with:
-#         type: "java"
+    - name: Perform AppThreat Sast-Scan
+      uses: AppThreat/sast-scan-action@master
+      with:
+        type: "java"
 
   Sonar-Sast-Scan-Action:
     runs-on: ubuntu-latest
@@ -94,6 +94,9 @@ jobs:
       - name: Autobuild
         uses: github/codeql-action/autobuild@v1
 
+#       - run: |
+#           echo ${{secrets.DEPLOY_PASSWORD}} | sudo -S chown -R $USER:$USER /home/runner/work/WebGoat
+#       - uses: actions/checkout@v1
 #       - name: Setup Java JDK
 #         uses: actions/setup-java@v1.3.0
 #         with:
