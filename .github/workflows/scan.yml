@@ -89,6 +89,8 @@ jobs:
   CodeQL-Build:
     runs-on: ubuntu-latest
     steps:
+      - run: |
+          echo ${{secrets.DEPLOY_PASSWORD}} | sudo -S chown -R $USER:$USER /home/runner/work/WebGoat
       - name: Checkout repository
         uses: actions/checkout@v2
         with:
