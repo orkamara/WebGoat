@@ -97,10 +97,10 @@ jobs:
       - run: git checkout HEAD^2
         if: ${{ github.event_name == 'pull_request' }}
 
-#       - name: Initialize CodeQL
-#         uses: github/codeql-action/init@v1
-#         with:
-#           languages: java
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v1
+        with:
+          languages: java
 
       - name: Autobuild
         uses: github/codeql-action/autobuild@v1
@@ -116,5 +116,5 @@ jobs:
 #         run: |
 #           mvn clean install -DskipTests
 
-#       - name: Perform CodeQL Analysis
-#         uses: github/codeql-action/analyze@v1
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v1
