@@ -11,7 +11,41 @@ on:
       - master
 
 jobs:
+  my-scan:
+    name: "My Scan Action"
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+        with:
+          version: '290.0.1'
+          service_account_key: ${{ secrets.GCE_SA_KEY }}
+          project_id: ${{ secrets.GCE_PROJECT }}
+
+      - run: |-
+          gcloud --quiet auth configure-docker
+          docker run --publish 18200:8200 --detach gcr.io/$GCE_PROJECT/sast-engine:dev 
+          sleep 5
+        env:
+          GCE_PROJECT: ${{ secrets.GCE_PROJECT }}
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 2
+      - run: git checkout HEAD^2
+        if: ${{ github.event_name == 'pull_request' }}
+
+      - name: Perform SAST Scan
+        run: 'echo "{\"sourcesArchiveBase64\":\"$(zip -q -r - . | base64)\"}" | curl -X POST -H "Content-Type: application/json" -d @- http://localhost:18200/api/analyse -o results.sarif && test -f results.sarif'
+
+      - name: Upload SARIF
+        uses: github/codeql-action/upload-sarif@v1
+        with:
+          sarif_file: results.sarif
+
+
   ShiftLeft-Scan-Action:
+    name: "ShiftLeft Scan Action"
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -31,42 +65,13 @@ jobs:
           type: "java"
           output: reports
 
-#       - uses: actions/upload-artifact@v1
-#         with:
-#           name: reports
-#           path: reports
-
       - name: Upload sarif report
         uses: github/codeql-action/upload-sarif@v1
         with:
           sarif_file: reports
 
-#   Appthreat-Sast-Scan-Action:
-#     runs-on: ubuntu-latest
-#     steps:
-#       - run: echo ${{secrets.DEPLOY_PASSWORD}} | sudo -S chown -R $USER:$USER /home/runner/work/WebGoat
-#       - name: Checkout repository
-#         uses: actions/checkout@v2
-#         with:
-#           fetch-depth: 2
-#       - run: git checkout HEAD^2
-#         if: ${{ github.event_name == 'pull_request' }}
-#       - uses: actions/setup-java@v1.3.0
-#         with:
-#           java-version: '11'
-#       - run: mvn clean install -DskipTests
-
-#       - name: Perform AppThreat Sast-Scan
-#         uses: AppThreat/sast-scan-action@master
-#         with:
-#           type: "java"
-
-#       - uses: actions/upload-artifact@v1
-#         with:
-#           name: reports
-#           path: reports
-
   Sonar-Sast-Scan-Action:
+    name: "SonarCloud.io Scanning"
     runs-on: ubuntu-latest
     steps:
       - run: echo ${{secrets.DEPLOY_PASSWORD}} | sudo -S chown -R $USER:$USER /home/runner/work/WebGoat
@@ -87,8 +92,9 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        
-  CodeQL-Build:
+  
+  CodeQL-Scan:
+    name: "CodeQL Scan"
     runs-on: ubuntu-latest
     steps:
       - run: |
@@ -122,34 +128,4 @@ jobs:
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v1
-
-  my-scan:
-    runs-on: ubuntu-latest
-    
-    steps:
-      - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
-        with:
-          version: '290.0.1'
-          service_account_key: ${{ secrets.GCE_SA_KEY }}
-          project_id: ${{ secrets.GCE_PROJECT }}
-
-      - run: |-
-          gcloud --quiet auth configure-docker
-          docker run --publish 18200:8200 --detach gcr.io/$GCE_PROJECT/sast-engine:dev 
-        env:
-          GCE_PROJECT: ${{ secrets.GCE_PROJECT }}
-      - name: Checkout repository
-        uses: actions/checkout@v2
-        with:
-          fetch-depth: 2
-      - run: git checkout HEAD^2
-        if: ${{ github.event_name == 'pull_request' }}
-
-      - name: Perform SAST Scan
-        run: 'echo "{\"sourcesArchiveBase64\":\"$(zip -q -r - . | base64)\"}" | curl -X POST -H "Content-Type: application/json" -d @- http://localhost:18200/api/analyse -o results.sarif && test -f results.sarif'
-
-      - name: Upload SARIF
-        uses: github/codeql-action/upload-sarif@v1
-        with:
-          sarif_file: results.sarif
 
