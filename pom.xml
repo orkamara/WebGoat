@@ -126,7 +126,7 @@
         <commons-collections.version>3.2.1</commons-collections.version>
         <commons-lang3.version>3.4</commons-lang3.version>
         <commons-io.version>2.6</commons-io.version>
-        <guava.version>18.0</guava.version>
+        <guava.version>32.0.0-android</guava.version>
         <hsqldb.version>2.3.4</hsqldb.version>
         <junit.version>4.12</junit.version>
         <lombok.version>1.18.4</lombok.version>
