@@ -124,7 +124,7 @@
         <!-- Shared properties with plugins and version numbers across submodules-->
         <activation.version>1.1.1</activation.version>
         <commons-collections.version>3.2.1</commons-collections.version>
-        <commons-lang3.version>3.4</commons-lang3.version>
+        <commons-lang3.version>3.18.0</commons-lang3.version>
         <commons-io.version>2.6</commons-io.version>
         <guava.version>18.0</guava.version>
         <hsqldb.version>2.3.4</hsqldb.version>
@@ -167,7 +167,7 @@
         <dependency>
             <groupId>org.sonarsource.scanner.maven</groupId>
             <artifactId>sonar-maven-plugin</artifactId>
-            <version>3.7.0.1746</version>
+            <version>5.0.0.4389</version>
         </dependency>
     </dependencies>
 
